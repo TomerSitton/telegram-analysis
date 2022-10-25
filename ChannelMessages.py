@@ -86,6 +86,11 @@ async def main(phone):
         messages = history.messages
         for message in messages:
             all_messages.append(message.to_dict())
+            print(message.reply_to)
+            print(message.reply_markup)
+            print(message.date)
+            print(message.message)
+            print(message.media)
         offset_id = messages[len(messages) - 1].id
         total_messages = len(all_messages)
         if total_count_limit != 0 and total_messages >= total_count_limit:

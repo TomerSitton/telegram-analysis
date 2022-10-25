@@ -36,6 +36,8 @@ api_hash = str(api_hash)
 phone = config['Telegram']['phone']
 username = config['Telegram']['username']
 
+offset_id = config['Telegram']['offset_id']
+
 # Create the client and connect
 client = TelegramClient(username, api_id, api_hash)
 
@@ -61,7 +63,7 @@ async def main(phone):
 
     my_channel = await client.get_entity(entity)
 
-    offset_id = 0
+    offset_id = global offset_id
     limit = 100
     all_messages = []
     total_messages = 0
@@ -92,5 +94,11 @@ async def main(phone):
     with open('channel_messages.json', 'w') as outfile:
         json.dump(all_messages, outfile, cls=DateTimeEncoder)
 
+    config = configparser.ConfigParser()
+    config.read("config.ini")
+    config.set('Telegram','offset_id',offset_id)
+    with open("config.ini","w") as config_file:
+        config_file.write(config)
+               
 with client:
     client.loop.run_until_complete(main(phone))

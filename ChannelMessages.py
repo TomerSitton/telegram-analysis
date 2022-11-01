@@ -64,6 +64,8 @@ async def main(config):
                         if link_message.media is not None:
                             data = extract_message_data(link_message=link_message, hashtag_message=message)
                             dump_data(data)
+                            await client.send_message(my_channel, 'Got it! Another link was added to the {} category in The Inventory!'.format(message.message.lower()))
+
                 config.set('Telegram','message_id',str(message_id))
                 with open("config.ini","w") as config_file:
                     config.write(config_file)
@@ -90,7 +92,7 @@ def extract_message_data(link_message, hashtag_message):
         data["Site Name"] = ",".join([urlparse(url).netloc for url in urls])
         data["URL"] = ",".join(urls)
         data["Title"] = link_message.message.split('\n',1)[0]
-        data["Description"] = link_message.message.split('\n',1)[1]
+        data["Description"] = link_message.message.split('\n',1)[1].lstrip('\n')
     else:
         print("Does not support file type {}".format(type(media)))
     return data
